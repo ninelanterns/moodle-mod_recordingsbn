@@ -4,7 +4,7 @@
  *
  * @package   mod_recordingsbn
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright 2011-2014 Blindside Networks Inc.
+ * @copyright 2011-2015 Blindside Networks Inc.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
 
@@ -207,12 +207,15 @@ if ($dbman->table_exists('bigbluebuttonbn_log') ) {
     }
 
     $meetingID='';
-    $results = $DB->get_records('bigbluebuttonbn_log', array('courseid' => $course->id, 'record' => 1, 'event' => 'Create'));
+    $results = $DB->get_records('bigbluebuttonbn_log', array('courseid' => $course->id, 'event' => 'Create' ));
+
     if( $results ){
         //Eliminates duplicates
         $mIDs = array();
         foreach ($results as $result) {
-            $mIDs[$result->meetingid] = $result->meetingid;
+            $meta = json_decode($result->meta);
+            if( $meta->record  )
+                $mIDs[$result->meetingid] = $result->meetingid;
         }
         //Generates the meetingID string
         foreach ($mIDs as $mID) {
@@ -269,7 +272,6 @@ if ($dbman->table_exists('bigbluebuttonbn_log') ) {
                         $attributes = array('title' => get_string($params['action']));
                         $icon = new pix_icon('t/'.$params['action'], get_string($params['action']), 'moodle', $attributes);
                         $actionbar .= $OUTPUT->action_icon($url, $icon, $action, $attributes, false);
-
                     }
 
                     $type = '';
