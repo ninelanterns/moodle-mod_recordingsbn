@@ -226,6 +226,9 @@ if ($dbman->table_exists('bigbluebuttonbn_log') ) {
 
     //If there are meetings with recordings load the data to the table
     if ( $meetingID != '' ) {
+        //To be executed with POST method
+        //$recordingsbn = bigbluebuttonbn_getRecordingsArray(array('meetingID' => $meetingID), $endpoint, $shared_secret);
+        //To be executed with GET method
         $recordingsbn = bigbluebuttonbn_getRecordingsArray($meetingID, $endpoint, $shared_secret);
 
         if( isset($recordingsbn) && !isset($recordingsbn['messageKey']) ){
