@@ -72,6 +72,13 @@ if (isguestuser()) {
 
 $moderator = has_capability('mod/bigbluebuttonbn:moderate', $context);
 
+//BigBlueButton server data
+$endpoint = trim(trim($CFG->bigbluebuttonbn_server_url),'/').'/';
+$serverVersion = bigbluebuttonbn_getServerVersion($endpoint);
+if ( !isset($serverVersion) ) {
+    print_error( 'general_error_unable_connect', 'bigbluebuttonbn', $CFG->wwwroot.'/admin/settings.php?section=modsettingbigbluebuttonbn' );
+}
+
 ///Set strings to show
 $view_head_recording = get_string('view_head_recording', 'recordingsbn');
 $view_head_course = get_string('view_head_course', 'recordingsbn');
@@ -226,10 +233,13 @@ if ($dbman->table_exists('bigbluebuttonbn_log') ) {
 
     //If there are meetings with recordings load the data to the table
     if ( $meetingID != '' ) {
-        //To be executed with POST method
-        //$recordingsbn = bigbluebuttonbn_getRecordingsArray(array('meetingID' => $meetingID), $endpoint, $shared_secret);
-        //To be executed with GET method
-        $recordingsbn = bigbluebuttonbn_getRecordingsArray($meetingID, $endpoint, $shared_secret);
+        if( $serverVersion == '0.91' ) {
+            //To be executed with POST method
+            $recordingsbn = bigbluebuttonbn_getRecordingsArray(array('meetingID' => $meetingID), $endpoint, $shared_secret);
+        } else {
+            //To be executed with GET method
+            $recordingsbn = bigbluebuttonbn_getRecordingsArray($meetingID, $endpoint, $shared_secret);
+        }
 
         if( isset($recordingsbn) && !isset($recordingsbn['messageKey']) ){
             foreach ( $recordingsbn as $recording ){
