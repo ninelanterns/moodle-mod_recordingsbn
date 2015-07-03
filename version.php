@@ -10,7 +10,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2015063001;
+$plugin->version = 2015063005;
 $plugin->requires = 2013111800;
 $plugin->cron = 0;
 $plugin->component = 'mod_recordingsbn';
