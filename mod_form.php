@@ -22,22 +22,33 @@ class mod_recordingsbn_mod_form extends moodleform_mod {
      */
     public function definition() {
 
+        global $CFG;
+
         $mform = $this->_form;
+        $current_resource =& $this->current;
 
         //-------------------------------------------------------------------------------
         // Adding the "general" fieldset, where all the common settings are showed
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('mod_form_block_general', 'bigbluebuttonbn'));
 
         // Adding the standard "name" field
-        $mform->addElement('text', 'name', get_string('recordingsbnname', 'recordingsbn'), array('size'=>'64'));
-        if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('name', PARAM_TEXT);
-        } else {
-            $mform->setType('name', PARAM_CLEANHTML);
-        }
+        $mform->addElement('text', 'name', get_string('mod_form_field_name','recordingsbn'), 'maxlength="64" size="32"');
+        $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        //$mform->addHelpButton('name', 'recordingsbnname', 'recordingsbn');
+        //$mform->addHelpButton('name', 'mod_form_field_name_help', 'recordingsbn');
+
+        if ( $CFG->version < '2015051100' ) {
+            //This is valid before v2.9
+            $this->add_intro_editor(false, get_string('mod_form_field_intro', 'bigbluebuttonbn'));
+        } else {
+            //This is valid after v2.9
+            $this->standard_intro_elements(get_string('mod_form_field_intro', 'bigbluebuttonbn'));
+        }
+        $mform->setAdvanced('introeditor');
+        $mform->setAdvanced('showdescription');
+
+        //-------------------------------------------------------------------------------
+        // Adding the "content" fieldset, where the content to be linked to this resource will be configured
 
         //-------------------------------------------------------------------------------
         // add standard elements, common to all modules

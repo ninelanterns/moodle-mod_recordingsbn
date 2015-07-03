@@ -23,16 +23,17 @@ defined('MOODLE_INTERNAL') || die();
  */
 function recordingsbn_supports($feature) {
     switch($feature) {
-        case FEATURE_IDNUMBER:                 return false;
-        case FEATURE_GROUPS:                   return false;
-        case FEATURE_GROUPINGS:                return false;
-        case FEATURE_GROUPMEMBERSONLY:         return false;
-        case FEATURE_MOD_INTRO:                return false;
-        case FEATURE_COMPLETION_TRACKS_VIEWS:  return false;
-        case FEATURE_GRADE_HAS_GRADE:          return false;
-        case FEATURE_GRADE_OUTCOMES:           return false;
-        case FEATURE_MOD_ARCHETYPE:            return MOD_ARCHETYPE_RESOURCE;
-        case FEATURE_BACKUP_MOODLE2:           return true;
+        case FEATURE_IDNUMBER:                return false;
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return false;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
 
         default:                               return null;
     }
@@ -311,4 +312,42 @@ function recordingsbn_extend_navigation(navigation_node $navref, stdclass $cours
  * @param navigation_node $recordingsbnnode {@link navigation_node}
  */
 function recordingsbn_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $recordingsbnnode=null) {
+}
+
+/**
+ * Given a course_module object, this function returns any
+ * "extra" information that may be needed when printing
+ * this activity in a course listing.
+ * See get_array_of_activities() in course/lib.php
+ *
+ * @global object
+ * @param object $coursemodule
+ * @return object|null
+ */
+function recordingsbn_get_coursemodule_info($coursemodule) {
+    global $CFG, $DB;
+
+    if ( !$recordingsbn = $DB->get_record('recordingsbn', array('id'=>$coursemodule->instance), 'id, name, intro, introformat')) {
+        return NULL;
+    }
+
+    $info = new cached_cm_info();
+    $info->name = $recordingsbn->name;
+    //$info->intro = $bigbluebuttonbn->intro;
+
+    if ($coursemodule->showdescription) {
+        // Convert intro to html. Do not filter cached version, filters run at display time.
+        $info->content = format_module_intro('recordingsbn', $recordingsbn, $coursemodule->id, false);
+    }
+
+    /*
+    if ( $bigbluebuttonbn->newwindow == 1 ) {
+        $viewurl = new moodle_url('/mod/bigbluebuttonbn/view.php', array('id' => $coursemodule->id));
+        $info->onclick = "window.open('". $viewurl->out(false)."'); return false;";
+        //$fullurl = "$CFG->wwwroot/mod/bigbluebuttonbn/view.php?id=$coursemodule->id";
+        //$info->onclick = "window.open('$fullurl'); return false;";
+    }
+    */
+
+    return $info;
 }

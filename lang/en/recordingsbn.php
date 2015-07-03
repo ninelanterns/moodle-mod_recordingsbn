@@ -13,13 +13,15 @@ $string['modulename'] = 'RecordingsBN';
 $string['modulenameplural'] = 'RecordingsBN';
 $string['modulename_help'] = 'Use the RecordingsBN module as a resource to provide access to the BigBlueButton recordings related to this course.';
 $string['modulename_link'] = 'RecordingsBN/view';
-$string['recordingsbnname'] = 'Resource name';
-$string['recordingsbnname_help'] = 'RecordingsBN provides a list of playback recordings in a BigBlueButton Server providing direct access to them.';
 $string['recordingsbn'] = 'RecordingsBN';
 $string['pluginadministration'] = 'recordingsbn administration';
 $string['pluginname'] = 'RecordingsBN';
 $string['recordingsbn:addinstance'] = 'Add a new resource with playback recordings';
 $string['recordingsbn:view'] = 'View recordings';
+
+$string['mod_form_field_name'] = 'Resource name';
+$string['mod_form_field_name_help'] = 'RecordingsBN provides a list of playback recordings in a BigBlueButton Server providing direct access to them.';
+
 $string['view_noguests'] = 'The RecordingsBN module is not open to guests';
 $string['view_delete_confirmation'] = 'Are you sure to delete this recording?';
 $string['view_dependency_error'] = 'You must have BigBlueButtonBN Activity Module installed';
